@@ -9,7 +9,7 @@ import { router } from "expo-router";
 import { Colors } from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 
-const quizzes = [
+const categories = [
   {
     id: "1",
     title: "Memory Verse",
@@ -66,7 +66,7 @@ const typeBadge: Record<string, { label: string; color: string }> = {
   plan: { label: "Plan", color: "#22c55e" },
 };
 
-const QuizIcon = ({ name, hot }: { name: any; hot: boolean }) => (
+const CategoryIcon = ({ name, hot }: { name: any; hot: boolean }) => (
   <Ionicons
     name={name}
     size={28}
@@ -93,7 +93,10 @@ export default function Home() {
         <Text style={styles.heroLabel}>Daily challenge</Text>
         <Text style={styles.heroTitle}>Memory Verse{"\n"}Challenge</Text>
         <Text style={styles.heroSub}>20 verses · Timed · Today only</Text>
-        <TouchableOpacity style={styles.heroBtn}>
+        <TouchableOpacity
+          style={styles.heroBtn}
+          onPress={() => router.push("/quiz/1" as any)}
+        >
           <Text style={styles.heroBtnText}>Start now</Text>
         </TouchableOpacity>
       </View>
@@ -112,10 +115,10 @@ export default function Home() {
         ))}
       </View>
 
-      {/* Quiz grid */}
-      <Text style={styles.sectionTitle}>Choose a quiz</Text>
+      {/* Category grid */}
+      <Text style={styles.sectionTitle}>Choose a category</Text>
       <View style={styles.grid}>
-        {quizzes.map((q) => (
+        {categories.map((q) => (
           <TouchableOpacity
             key={q.id}
             style={[styles.quizCard, q.hot && styles.quizCardHot]}
@@ -130,9 +133,21 @@ export default function Home() {
                 <Text style={styles.hotText}>Hot</Text>
               </View>
             )}
-            <QuizIcon name={q.icon} hot={q.hot} />
+            <CategoryIcon name={q.icon} hot={q.hot} />
             <Text style={styles.quizName}>{q.title}</Text>
             <Text style={styles.quizMeta}>{q.meta}</Text>
+            <View
+              style={[
+                styles.typePill,
+                { borderColor: typeBadge[q.type].color },
+              ]}
+            >
+              <Text
+                style={[styles.typeText, { color: typeBadge[q.type].color }]}
+              >
+                {typeBadge[q.type].label}
+              </Text>
+            </View>
           </TouchableOpacity>
         ))}
       </View>
@@ -255,7 +270,16 @@ const styles = StyleSheet.create({
     color: Colors.text,
     marginBottom: 4,
   },
-  quizMeta: { fontSize: 11, color: Colors.textMuted },
+  quizMeta: { fontSize: 11, color: Colors.textMuted, marginBottom: 6 },
+  typePill: {
+    marginTop: 4,
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    alignSelf: "flex-start",
+  },
+  typeText: { fontSize: 9, fontWeight: "700" },
   verseStrip: {
     margin: 16,
     backgroundColor: Colors.surface,
