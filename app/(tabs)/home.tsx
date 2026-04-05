@@ -8,6 +8,7 @@ import {
 import { router } from "expo-router";
 import { Colors } from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { useUser } from "../../hooks/useUser";
 
 const categories = [
   {
@@ -76,6 +77,9 @@ const CategoryIcon = ({ name, hot }: { name: any; hot: boolean }) => (
 );
 
 export default function Home() {
+  // inside Home() component, first line:
+  const { user } = useUser();
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Header */}
@@ -84,7 +88,9 @@ export default function Home() {
           Bible<Text style={styles.accent}>Quest</Text>
         </Text>
         <View style={styles.avatar}>
-          <Ionicons name="person" size={18} color="#fff" />
+          <TouchableOpacity onPress={() => router.push("/profile" as any)}>
+            <Ionicons name="person" size={18} color="#fff" />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -104,9 +110,9 @@ export default function Home() {
       {/* Streak row */}
       <View style={styles.streakRow}>
         {[
-          ["7", "Day streak"],
-          ["124", "Points"],
-          ["12", "Verses learnt"],
+          [String(user.streak), "Day streak"],
+          [String(user.points), "Points"],
+          [String(user.versesLearnt), "Verses learnt"],
         ].map(([num, lbl]) => (
           <View key={lbl} style={styles.streakCard}>
             <Text style={styles.streakNum}>{num}</Text>
